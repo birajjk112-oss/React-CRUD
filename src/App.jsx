@@ -7,8 +7,27 @@ import { nanoid } from "nanoid";
 import Form from "./components/Form";
 import { useEffect, useRef, useState } from "react";
 
+const getLocalStorage = () => {
+  try {
+    const list = localStorage.getItem("grocery-list");
+    if (list) {
+      return JSON.parse(list);
+    }
+  } catch (err) {
+    console.error("Failed to read grocery-list from localStorage:", err);
+  }
+  return [];
+};
+const setLocalStorage = (items) => {
+  try {
+    localStorage.setItem("grocery-list", JSON.stringify(items));
+  } catch (err) {
+    console.error("Failed to write grocery-list to localStorage:", err);
+  }
+};
+
 const App = () => {
-  const [items, setItems] = useState(groceryItems);
+  const [items, setItems] = useState(() => getLocalStorage());
   const [editId, setEditId] = useState(null);
   const inputRef = useRef(null);
 
@@ -17,8 +36,11 @@ const App = () => {
       inputRef.current.focus();
     }
   }, [editId]);
+
+  useEffect(() => {
+    setLocalStorage(items);
+  }, [items]);
   const updateItemName = (newName) => {
-    console.log("updateItemName called with:", newName, "for editId:", editId);
     const newItems = items.map((item) => {
       if (item.id === editId) {
         console.log("Updating item:", item, "to name:", newName);

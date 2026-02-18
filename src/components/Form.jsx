@@ -25,7 +25,6 @@ const Form = ({
       toast.error("please provide value");
       return;
     }
-    console.log("Submitting:", { editItemId, newItemName });
     if (editItemId) {
       updateItemName(newItemName);
     } else {

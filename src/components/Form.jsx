@@ -1,9 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import "./Form.css";
 
-const Form = ({ addItem }) => {
+const Form = ({
+  addItem,
+  editItemId,
+  updateItemName,
+  itemToEdit,
+  inputRef,
+}) => {
   const [newItemName, setNewItemName] = useState("");
+
+  useEffect(() => {
+    if (itemToEdit) {
+      setNewItemName(itemToEdit.name);
+    } else {
+      setNewItemName("");
+    }
+  }, [itemToEdit]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -11,7 +25,12 @@ const Form = ({ addItem }) => {
       toast.error("please provide value");
       return;
     }
-    addItem(newItemName);
+    console.log("Submitting:", { editItemId, newItemName });
+    if (editItemId) {
+      updateItemName(newItemName);
+    } else {
+      addItem(newItemName);
+    }
     setNewItemName("");
   };
 
@@ -23,11 +42,12 @@ const Form = ({ addItem }) => {
           type="text"
           className="form-input"
           value={newItemName}
+          ref={inputRef}
           placeholder="e.g. eggs"
           onChange={(event) => setNewItemName(event.target.value)}
         />
         <button type="submit" className="btn">
-          add item
+          {editItemId ? "edit item" : "add item"}
         </button>
       </div>
     </form>

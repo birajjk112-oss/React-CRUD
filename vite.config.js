@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/grocery-bud3/',
+  // Set the base to the GitHub repo name so pages load at /<repo>/
+  base: '/React-CRUD/',
   plugins: [react()],
 })
